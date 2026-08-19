@@ -1,0 +1,8 @@
+repositories {
+   maven { url 'https://maven.google.com' }
+}
+
+dependencies {
+    implementation 'com.google.firebase:firebase-messaging:(+,23.1.99]'
+    implementation 'androidx.databinding:viewbinding:8.1.1'
+}

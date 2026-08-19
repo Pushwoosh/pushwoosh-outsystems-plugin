@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.2">
+
+	<name>Pushwoosh</name>
+
+	<description>
+		This plugin allows you to send and receive push notifications. Powered by Pushwoosh (www.pushwoosh.com).
+	</description>
+
+	<!-- <engines>
+			<engine name="cordova" version=">=3.1.0" />
+	</engines> -->
+
+	<license>MIT</license>
+
+	<repo>https://github.com/Pushwoosh/pushwoosh-phonegap-plugin</repo>
+	<issue>https://github.com/Pushwoosh/pushwoosh-phonegap-plugin/issues</issue>
+
+	<preference name="LOG_LEVEL" default="DEBUG" />
+	<preference name="IOS_FOREGROUND_ALERT_TYPE" default="ALERT" />
+	<preference name="PREHANDLE_URL_NOTIFICATIONS" default="NO" />
+	<preference name="ANDROID_FOREGROUND_PUSH" default="false" />
+    <preference name="PW_VOIP_IOS_ENABLED" default="false" />
+    <preference name="PW_VOIP_ANDROID_ENABLED" default="false" />
+
+
+	<js-module src="www/PushNotification.js" name="PushNotification">
+		<clobbers target="plugins.pushNotification" />
+	</js-module>
+
+	<!-- android -->
+	<platform name="android">
+		<hook type="before_plugin_install" src="hooks/outsystems/handle_google_services.js" />
+		<hook type="before_plugin_install" src="hooks/outsystems/handle_agconnect_services.js" />
+		<hook type="before_plugin_install" src="hooks/outsystems/add_fcm_router.js" />
+		<hook type="before_plugin_install" src="hooks/outsystems/add_hms_router.js" />
+		<hook type="after_plugin_install" src="hooks/outsystems/google_services_cleanup.js" />
+        <config-file target="config.xml" parent="/*">
+            <preference name="GradlePluginGoogleServicesEnabled" value="true" />
+            <preference name="GradlePluginGoogleServicesVersion" value="4.3.15" />
+        </config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+			<meta-data android:name="com.pushwoosh.log_level" android:value="$LOG_LEVEL" />
+			<meta-data android:name="com.pushwoosh.foreground_push" android:value="$ANDROID_FOREGROUND_PUSH" />
+
+			<meta-data android:name="com.pushwoosh.notification_service_extension" android:value="com.pushwoosh.plugin.pushnotifications.PushwooshNotificationServiceExtension" />
+
+			<meta-data android:name="com.pushwoosh.internal.plugin_provider"	android:value="com.pushwoosh.plugin.internal.PhonegapPluginProvider" />
+
+            <meta-data android:name="com.pushwoosh.CALL_EVENT_LISTENER" android:value="com.pushwoosh.plugin.pushnotifications.calls.PWCordovaCallEventListener" />
+
+		</config-file>
+
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="PushNotification">
+				<param name="android-package" value="com.pushwoosh.plugin.pushnotifications.PushNotifications" onload="true" />
+			</feature>
+		</config-file>
+
+    	<!-- core source files -->
+
+		<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/PushNotifications.java"
+			target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+            
+        <source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/InboxUiStyleManager.java"
+            target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+
+		<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/VoIPEventStorage.java"
+			target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+
+		<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/PushwooshNotificationServiceExtension.java"
+			target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+            
+		<source-file src="src/android/src/com/pushwoosh/plugin/internal/PhonegapPluginProvider.java"
+			target-dir="src/com/pushwoosh/plugin/internal" />
+
+    	<!-- required call source files -->
+		<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/CallsAdapter.java" target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+    	<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/NoopCallsAdapter.java" target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+    	<source-file src="src/android/src/com/pushwoosh/plugin/pushnotifications/CallsAdapterFactory.java" target-dir="src/com/pushwoosh/plugin/pushnotifications" />
+
+    	<!-- gradle script to include pushwoosh-calls-related source files and dependencies -->
+    	<hook type="after_prepare" src="spec/set-voip-gradle-prop.js" />
+	    <framework src="src/android/add-android-voip.gradle" custom="true" type="gradleReference" />
+
+        <framework src="build-extras-pushwoosh.gradle" custom="true" type="gradleReference" />
+
+		<framework src="androidx.work:work-runtime:2.7.1" />
+		<framework src="androidx.annotation:annotation:1.4.0" />
+        <framework src="androidx.appcompat:appcompat:1.6.1" />
+        <framework src="androidx.core:core-ktx:1.10.1"/>
+        <framework src="androidx.recyclerview:recyclerview:1.2.1" />
+        <framework src="androidx.swiperefreshlayout:swiperefreshlayout:1.1.0" />
+        <framework src="com.github.bumptech.glide:glide:4.10.0" />
+        <framework src="org.jetbrains.kotlin:kotlin-stdlib:1.1.60" />
+        <framework src="com.google.android.material:material:1.12.0"/>
+
+        <framework src="com.pushwoosh:pushwoosh:6.9.6"/>
+		<framework src="com.pushwoosh:pushwoosh-amazon:6.9.6"/>
+        <framework src="com.pushwoosh:pushwoosh-firebase:6.9.6"/>
+		<framework src="com.pushwoosh:pushwoosh-badge:6.9.6"/>
+        <framework src="com.pushwoosh:pushwoosh-inbox:6.9.6"/>
+        <framework src="com.pushwoosh:pushwoosh-inbox-ui:6.9.6"/>
+		<framework src="com.pushwoosh:pushwoosh-huawei:6.9.6"/>
+    </platform>
+
+	<!-- ios -->
+	<platform name="ios">
+		<framework src="Security.framework" />
+		<framework src="StoreKit.framework" />
+		<framework src="CoreLocation.framework" />
+		<framework src="libstdc++.dylib"/>
+		<framework src="libz.dylib"/>
+		<config-file target="config.xml" parent="/*">
+			<feature name="PushNotification">
+				<param name="ios-package" value="PushNotification"/>
+			</feature>
+		</config-file>
+        
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+          <array>
+            <string>remote-notification</string>
+          </array>
+        </config-file>
+
+		<config-file target="*-Info.plist" parent="Pushwoosh_LOG_LEVEL">
+			<string>$LOG_LEVEL</string>
+		</config-file>
+
+		<config-file target="*-Info.plist" parent="Pushwoosh_ALERT_TYPE">
+			<string>$IOS_FOREGROUND_ALERT_TYPE</string>
+		</config-file>
+
+		<config-file target="*-Info.plist" parent="Pushwoosh_PREHANDLE_URL_NOTIFICATIONS">
+			<string>$PREHANDLE_URL_NOTIFICATIONS</string>
+		</config-file>
+
+		<config-file parent="aps-environment" target="*/Entitlements-Debug.plist">
+			<string>development</string>
+		</config-file>
+		<config-file parent="aps-environment" target="*/Entitlements-Release.plist">
+			<string>production</string>
+		</config-file>
+        
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="PushwooshXCFramework" spec="7.1.5" />
+                <pod name="PushwooshInboxUIXCFramework" spec="7.0.3" />
+            </pods>
+        </podspec>
+
+        <hook type="after_plugin_install" src="spec/add-voip-pod.js" />
+
+		<header-file src="src/ios/PushNotification.h" />
+		<source-file src="src/ios/PushNotification.m" />
+        <header-file src="src/ios/PWBackward.h" />
+        <source-file src="src/ios/PWBackward.m" />
+        <header-file src="src/ios/PWLog.h" />
+	</platform>
+
+	<!-- wp8 -->
+	<platform name="wp8">
+
+		<config-file target="config.xml" parent="/*">
+			<feature name="PushNotification">
+				<param name="wp-package" value="PushNotification"/>
+			</feature>
+		</config-file>
+
+		<config-file>
+			<access origin="*.pushwoosh.com" />
+		</config-file>
+
+		<config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+			<Capability Name="ID_CAP_PUSH_NOTIFICATION"/>
+			<Capability Name="ID_CAP_IDENTITY_DEVICE"/>
+		</config-file>
+
+		<source-file src="src/wp8/PushNotification.cs" />
+
+		<framework src="src/wp8/PushSDK/Newtonsoft.Json.dll" custom="true" />
+		<framework src="src/wp8/PushSDK/PushSDK.dll" custom="true" />
+	</platform>
+
+	<!-- windows -->
+	<platform name="windows">
+		<js-module src="src/windows/PushwooshPluginProxy.js" name="PushwooshPluginProxy">
+			<merges target="" />
+		</js-module>
+		<framework src="src/windows/PushSDK/Newtonsoft.Json.dll" custom="true" />
+		<framework src="src/windows/PushSDK/PushSDK.winmd" custom="true" />
+	</platform>
+</plugin>
