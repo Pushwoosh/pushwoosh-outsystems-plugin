@@ -10,6 +10,14 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.4
+
+### Bug Fixes
+- Removed the Cordova plugin's issue templates, which survived the previous
+  release: the publish step spared them along with `.git`
+
+---
+
 ## 8.3.70-OS.3
 
 ### Improvements
