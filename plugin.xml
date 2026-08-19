@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.5">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.6">
 
 	<name>Pushwoosh</name>
 
@@ -31,15 +31,11 @@
 	<!-- android -->
 	<platform name="android">
 		<hook type="before_plugin_install" src="hooks/outsystems/handle_google_services.js" />
+		<hook type="before_plugin_install" src="hooks/outsystems/generate_google_services_resources.js" />
 		<hook type="before_plugin_install" src="hooks/outsystems/handle_agconnect_services.js" />
 		<hook type="before_plugin_install" src="hooks/outsystems/add_fcm_router.js" />
 		<hook type="before_plugin_install" src="hooks/outsystems/add_hms_router.js" />
 		<hook type="after_plugin_install" src="hooks/outsystems/google_services_cleanup.js" />
-        <config-file target="config.xml" parent="/*">
-            <preference name="GradlePluginGoogleServicesEnabled" value="true" />
-            <preference name="GradlePluginGoogleServicesVersion" value="4.3.15" />
-        </config-file>
-
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<meta-data android:name="com.pushwoosh.log_level" android:value="$LOG_LEVEL" />
 			<meta-data android:name="com.pushwoosh.foreground_push" android:value="$ANDROID_FOREGROUND_PUSH" />
@@ -101,8 +97,7 @@
         <framework src="com.pushwoosh:pushwoosh-inbox:6.9.6"/>
         <framework src="com.pushwoosh:pushwoosh-inbox-ui:6.9.6"/>
 		<framework src="com.pushwoosh:pushwoosh-huawei:6.9.6"/>
-		<framework src="libs/android/googleservices-build.gradle" custom="true" type="gradleReference" />
-	</platform>
+    </platform>
 
 	<!-- ios -->
 	<platform name="ios">
