@@ -1,0 +1,29 @@
+// Applies the Google Services plugin, and only if nothing else already did.
+//
+// cordova-android applies it itself when GradlePluginGoogleServicesEnabled is
+// set, but MABS assembles the project its own way and that preference does not
+// reach it, so google-services.json never becomes resources and Firebase cannot
+// issue a token.
+//
+// This file deliberately declares no buildscript of its own. A buildscript
+// shipped by a plugin gets its own classloader, where the Android Gradle Plugin
+// is invisible, and the Google Services plugin then fails to load with
+// NoClassDefFoundError on com/android/build/api/variant/Variant. It relies on
+// the classpath the host build already has, and does nothing when there is none.
+
+// postBuildExtras runs after cdvPluginPostBuildExtras, so by the time this
+// executes every other plugin has had its turn and the check below is
+// meaningful.
+ext.postBuildExtras = {
+    if (project.extensions.findByName('googleServices') != null) {
+        return
+    }
+
+    try {
+        project.apply plugin: 'com.google.gms.google-services'
+    } catch (Exception e) {
+        // Not on the classpath: the host build owns Firebase configuration and
+        // this file has nothing to add.
+        println "[pushwoosh] Google Services plugin not applied: ${e.message}"
+    }
+}

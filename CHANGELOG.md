@@ -10,6 +10,22 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.5
+
+### Bug Fixes
+- Fixed Android registration failing in MABS with `Failed to retrieve token. Is
+  firebase configured correctly?`. The plugin relied on cordova-android applying
+  the Google Services plugin from the `GradlePluginGoogleServicesEnabled`
+  preference, which does not reach MABS, so `google-services.json` never became
+  application resources and Firebase could not issue a token. The plugin applies
+  it itself again, without the isolated buildscript that made the old gradle file
+  fail on current toolchains
+- Removed the `com.pushwoosh.CALL_EVENT_LISTENER` manifest entry. It named a
+  class from the VoIP source set, which only reaches the build when VoIP is
+  enabled, so the SDK reported a missing class on every launch
+
+---
+
 ## 8.3.70-OS.4
 
 ### Bug Fixes
