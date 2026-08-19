@@ -10,6 +10,17 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.3
+
+### Improvements
+- Releases on GitHub now carry the changelog entry for the version, instead of
+  being a bare tag
+- Removed files that never reach a device from the published plugin: the issue
+  templates (they point at the Cordova plugin's tracker), `.npmignore`, and the
+  Jasmine test scaffolding. The VoIP install hooks under `spec/` stay
+
+---
+
 ## 8.3.70-OS.2
 
 ### New Features
