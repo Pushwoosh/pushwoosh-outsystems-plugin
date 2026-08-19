@@ -10,6 +10,16 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.7
+
+### Bug Fixes
+- Fixed builds failing with an unexplained `TypeError [ERR_INVALID_ARG_TYPE]`.
+  The hook that records the VoIP setting could abort the whole build, and the
+  real reason was lost on the way out; it now reports the problem and lets the
+  build continue
+
+---
+
 ## 8.3.70-OS.6
 
 ### Bug Fixes
