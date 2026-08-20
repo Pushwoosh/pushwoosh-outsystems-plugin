@@ -372,6 +372,9 @@ API_AVAILABLE(ios(10))
         //no Pushwoosh App Id provided in JS call, let's try Info.plist (SDK default)
         if (self.pushManager == nil) {
             PWLogError(@"PushNotification.registerDevice: Missing Pushwoosh App ID");
+            CDVPluginResult *error = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                                      messageAsString:@"Missing Pushwoosh App ID"];
+            [self.commandDelegate sendPluginResult:error callbackId:command.callbackId];
             return;
         }
     }
@@ -396,6 +399,12 @@ API_AVAILABLE(ios(10))
     }
 
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    NSMutableDictionary *status = [PushNotificationManager getRemoteNotificationStatus];
+    status[@"initialized"] = @YES;
+    CDVPluginResult *ok = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                       messageAsDictionary:status];
+    [self.commandDelegate sendPluginResult:ok callbackId:command.callbackId];
 }
 
 #pragma mark - UNUserNotificationCenter Delegate Methods

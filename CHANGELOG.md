@@ -10,6 +10,16 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.8
+
+### Bug Fixes
+- Fixed the initialization client action never finishing on iOS. `onDeviceReady`
+  did not answer its callback, so the promise stayed pending and anything
+  chained after initialization never ran. It now returns the notification
+  status, and reports a missing application code instead of failing silently
+
+---
+
 ## 8.3.70-OS.7
 
 ### Bug Fixes

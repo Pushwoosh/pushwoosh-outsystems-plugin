@@ -56,7 +56,7 @@ Add the plugin in your module's **Extensibility Configurations**:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.7",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.8",
     "variables": [
       { "name": "LOG_LEVEL", "value": "DEBUG" }
     ]
@@ -231,7 +231,7 @@ Set these under `variables` in the Extensibility Configurations:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.7",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.8",
     "variables": [
       { "name": "LOG_LEVEL", "value": "DEBUG" },
       { "name": "ANDROID_FOREGROUND_PUSH", "value": "false" },
