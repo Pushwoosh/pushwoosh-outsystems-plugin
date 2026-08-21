@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.9">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.10">
 
 	<name>Pushwoosh</name>
 
@@ -17,8 +17,8 @@
 	<issue>https://github.com/Pushwoosh/pushwoosh-phonegap-plugin/issues</issue>
 
 	<preference name="LOG_LEVEL" default="DEBUG" />
-	<preference name="PW_APPID" default="" />
-	<preference name="PW_API_TOKEN" default="" />
+	<preference name="PW_APPID" default=" " />
+	<preference name="PW_API_TOKEN" default=" " />
 	<preference name="IOS_FOREGROUND_ALERT_TYPE" default="ALERT" />
 	<preference name="PREHANDLE_URL_NOTIFICATIONS" default="NO" />
 	<preference name="ANDROID_FOREGROUND_PUSH" default="false" />

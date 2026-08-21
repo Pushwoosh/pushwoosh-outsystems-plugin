@@ -10,6 +10,15 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.10
+
+### Bug Fixes
+- Fixed the build failing with "one or more plugin variables are missing"
+  (OS-MABS-PLG-40002) when `PW_APPID` or `PW_API_TOKEN` was not set. Both
+  variables are optional again; use this version instead of 8.3.70-OS.9
+
+---
+
 ## 8.3.70-OS.9
 
 ### Features
