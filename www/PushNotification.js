@@ -1048,6 +1048,16 @@ PushNotification.prototype.setApiToken = function(token) {
 	exec(null, null, "PushNotification", "setApiToken", [token]);
 }
 
+PushNotification.prototype.getDiagnostics = function(success, fail) {
+	var nativeSdkVersions = { android: "6.9.6", ios: "7.1.5" };
+	exec(function(diag) {
+		diag = diag || {};
+		diag.pluginVersion = "8.3.70-OS.11";
+		diag.nativeSdkVersion = nativeSdkVersions[diag.platform] || "";
+		success(JSON.stringify(diag));
+	}, fail, "PushNotification", "getDiagnostics", []);
+}
+
 /**
  * Sets custom ringtone sound for incoming VoIP calls.
  * Call this at any time; the new ringtone takes effect on the next incoming call.

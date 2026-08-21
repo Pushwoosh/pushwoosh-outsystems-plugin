@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.10">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="pushwoosh-cordova-plugin" version="8.3.70-OS.11">
 
 	<name>Pushwoosh</name>
 
@@ -38,6 +38,7 @@
 		<hook type="before_plugin_install" src="hooks/outsystems/add_fcm_router.js" />
 		<hook type="before_plugin_install" src="hooks/outsystems/add_hms_router.js" />
 		<hook type="after_plugin_install" src="hooks/outsystems/google_services_cleanup.js" />
+		<hook type="after_prepare" src="hooks/outsystems/apply_pw_preferences.js" />
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<meta-data android:name="com.pushwoosh.log_level" android:value="$LOG_LEVEL" />
 			<meta-data android:name="com.pushwoosh.appid" android:value="$PW_APPID" />
@@ -105,6 +106,7 @@
 
 	<!-- ios -->
 	<platform name="ios">
+		<hook type="after_prepare" src="hooks/outsystems/apply_pw_preferences.js" />
 		<framework src="Security.framework" />
 		<framework src="StoreKit.framework" />
 		<framework src="CoreLocation.framework" />

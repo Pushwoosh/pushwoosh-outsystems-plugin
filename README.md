@@ -56,7 +56,7 @@ Add the plugin in your module's **Extensibility Configurations**:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.10",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.11",
     "variables": [
       { "name": "LOG_LEVEL", "value": "DEBUG" }
     ]
@@ -210,6 +210,12 @@ pushwoosh.getTags(
 | `deleteMessage(id)` | Delete a message |
 | `performAction(id)` | Perform the action associated with a message |
 
+### Diagnostics
+
+| Method | Description |
+|--------|-------------|
+| `getDiagnostics(success, fail)` | Returns a JSON string describing the integration state: effective and built-in Application Code, API token presence, HWID, push token, notification permission, services registered for messaging events, plugin and native SDK versions. Attach it to support tickets instead of collecting device logs |
+
 ### Communication Control
 
 | Method | Description |
@@ -231,7 +237,7 @@ Set these under `variables` in the Extensibility Configurations:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.10",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.11",
     "variables": [
       { "name": "PW_APPID", "value": "XXXXX-XXXXX" },
       { "name": "PW_API_TOKEN", "value": "your device API token" },
@@ -255,6 +261,27 @@ Set these under `variables` in the Extensibility Configurations:
 Variable names are **case-sensitive** — write them exactly as shown.
 Initializing from JavaScript (`onDeviceReady` with `appid`) keeps working and
 still applies when both are set.
+
+### Setting the Application Code from a consumer app
+
+Plugin variables only work in the Extensibility Configurations of the module
+that declares the plugin — OutSystems does not merge variables from a consumer
+app into a producer's plugin entry. If the plugin comes into your app through
+a module (the usual Forge setup), set `PW_APPID` / `PW_API_TOKEN` as
+application **preferences** instead — the plugin reads them at build time and
+writes the same native entries:
+
+```json
+{
+  "preferences": {
+    "global": [
+      { "name": "PW_APPID", "value": "XXXXX-XXXXX" }
+    ]
+  }
+}
+```
+
+A preference wins over a plugin variable when both are set.
 
 ## Differences from the Cordova Plugin
 

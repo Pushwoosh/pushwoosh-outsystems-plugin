@@ -353,6 +353,33 @@ API_AVAILABLE(ios(10))
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)getDiagnostics:(CDVInvokedUrlCommand *)command {
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *plistAppId = [[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_APPID"] description]
+                            stringByTrimmingCharactersInSet:whitespace] ?: @"";
+    NSString *plistApiToken = [[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_API_TOKEN"] description]
+                               stringByTrimmingCharactersInSet:whitespace] ?: @"";
+    NSString *effective = [[PWPreferences preferences] appCode] ?: @"";
+
+    NSMutableDictionary *diag = [NSMutableDictionary new];
+    diag[@"platform"] = @"ios";
+    diag[@"packageName"] = [[NSBundle mainBundle] bundleIdentifier] ?: @"";
+    diag[@"appIdEffective"] = effective;
+    diag[@"appIdManifest"] = plistAppId;
+    diag[@"appIdSource"] = plistAppId.length == 0
+        ? @"runtime" : ([plistAppId isEqualToString:effective] ? @"manifest" : @"runtime-override");
+    diag[@"apiTokenInManifest"] = @(plistApiToken.length > 0);
+    diag[@"hwid"] = [[PushNotificationManager pushManager] getHWID] ?: @"";
+    diag[@"pushToken"] = [[PushNotificationManager pushManager] getPushToken] ?: @"";
+    diag[@"transport"] = @"APNs";
+
+    [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
+        diag[@"notificationsEnabled"] = @(settings.authorizationStatus == UNAuthorizationStatusAuthorized);
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:diag];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 - (void)setApiToken:(CDVInvokedUrlCommand *)command {
     NSString *token = command.arguments[0];
     [[PWPreferences preferences] setApiToken:token];

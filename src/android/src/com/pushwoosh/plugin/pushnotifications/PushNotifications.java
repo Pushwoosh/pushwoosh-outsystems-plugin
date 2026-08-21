@@ -386,6 +386,64 @@ public class PushNotifications extends CordovaPlugin {
 	}
 
 	@CordovaMethod
+	private boolean getDiagnostics(JSONArray data, final CallbackContext callbackContext) {
+		try {
+			Context context = cordova.getActivity().getApplicationContext();
+			JSONObject diag = new JSONObject();
+			diag.put("platform", "android");
+			diag.put("packageName", context.getPackageName());
+
+			String effective = Pushwoosh.getInstance().getApplicationCode();
+			String manifestAppId = "";
+			String manifestApiToken = "";
+			try {
+				Bundle metaData = context.getPackageManager()
+						.getApplicationInfo(context.getPackageName(), android.content.pm.PackageManager.GET_META_DATA)
+						.metaData;
+				if (metaData != null) {
+					Object appId = metaData.get("com.pushwoosh.appid");
+					Object apiToken = metaData.get("com.pushwoosh.apitoken");
+					manifestAppId = appId == null ? "" : String.valueOf(appId).trim();
+					manifestApiToken = apiToken == null ? "" : String.valueOf(apiToken).trim();
+				}
+			} catch (Exception ignored) {
+			}
+			diag.put("appIdEffective", effective);
+			diag.put("appIdManifest", manifestAppId);
+			diag.put("appIdSource", manifestAppId.isEmpty()
+					? "runtime" : (manifestAppId.equals(effective) ? "manifest" : "runtime-override"));
+			diag.put("apiTokenInManifest", !manifestApiToken.isEmpty());
+
+			diag.put("hwid", Pushwoosh.getInstance().getHwid());
+			String pushToken = Pushwoosh.getInstance().getPushToken();
+			diag.put("pushToken", pushToken == null ? "" : pushToken);
+			String userId = Pushwoosh.getInstance().getUserId();
+			diag.put("userId", userId == null ? "" : userId);
+			diag.put("notificationsEnabled", NotificationManagerCompat.from(context).areNotificationsEnabled());
+
+			JSONArray services = new JSONArray();
+			String[] actions = { "com.google.firebase.MESSAGING_EVENT", "com.huawei.push.action.MESSAGING_EVENT" };
+			for (String serviceAction : actions) {
+				Intent intent = new Intent(serviceAction);
+				intent.setPackage(context.getPackageName());
+				for (android.content.pm.ResolveInfo info : context.getPackageManager().queryIntentServices(intent, 0)) {
+					JSONObject service = new JSONObject();
+					service.put("action", serviceAction);
+					service.put("class", info.serviceInfo == null ? "" : info.serviceInfo.name);
+					service.put("priority", info.priority);
+					services.put(service);
+				}
+			}
+			diag.put("messagingServices", services);
+
+			callbackContext.success(diag);
+		} catch (Exception e) {
+			callbackContext.error(e.getMessage());
+		}
+		return true;
+	}
+
+	@CordovaMethod
 	private boolean getPushwooshHWID(JSONArray data, final CallbackContext callbackContext) {
 		callbackContext.success(Pushwoosh.getInstance().getHwid());
 		return true;

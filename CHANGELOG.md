@@ -10,6 +10,21 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.11
+
+### Features
+- Added `getDiagnostics`: returns a JSON summary of the integration state —
+  effective and built-in Application Code and where it came from, API token
+  presence, HWID, push token, notification permission, services registered for
+  FCM/HMS messaging events, plugin and native SDK versions. Attach its output
+  to a support ticket instead of collecting device logs
+- `PW_APPID` and `PW_API_TOKEN` can now also be set as application preferences
+  in the Extensibility Configurations of the app itself. Plugin variables do
+  not cross the module boundary in OutSystems; preferences do. When both are
+  set, the preference wins
+
+---
+
 ## 8.3.70-OS.10
 
 ### Bug Fixes
