@@ -56,7 +56,7 @@ Add the plugin in your module's **Extensibility Configurations**:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.8",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.9",
     "variables": [
       { "name": "LOG_LEVEL", "value": "DEBUG" }
     ]
@@ -231,8 +231,10 @@ Set these under `variables` in the Extensibility Configurations:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.8",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.70-OS.9",
     "variables": [
+      { "name": "PW_APPID", "value": "XXXXX-XXXXX" },
+      { "name": "PW_API_TOKEN", "value": "your device API token" },
       { "name": "LOG_LEVEL", "value": "DEBUG" },
       { "name": "ANDROID_FOREGROUND_PUSH", "value": "false" },
       { "name": "PREHANDLE_URL_NOTIFICATIONS", "value": "NO" }
@@ -243,10 +245,16 @@ Set these under `variables` in the Extensibility Configurations:
 
 | Preference | Default | Description |
 |-----------|---------|-------------|
+| `PW_APPID` | *(empty)* | Pushwoosh Application Code, written into AndroidManifest.xml and Info.plist at build time. With it the SDK is configured even before JavaScript runs — pushes delivered to a killed app are handled and open statistics are collected |
+| `PW_API_TOKEN` | *(empty)* | Pushwoosh Device API token, written into the native build the same way |
 | `LOG_LEVEL` | `DEBUG` | Logging level |
 | `IOS_FOREGROUND_ALERT_TYPE` | `ALERT` | iOS foreground notification display type |
 | `ANDROID_FOREGROUND_PUSH` | `false` | Show notifications when app is in foreground (Android) |
 | `PREHANDLE_URL_NOTIFICATIONS` | `NO` | Let the SDK open notification URLs before the app sees them |
+
+Variable names are **case-sensitive** — write them exactly as shown.
+Initializing from JavaScript (`onDeviceReady` with `appid`) keeps working and
+still applies when both are set.
 
 ## Differences from the Cordova Plugin
 

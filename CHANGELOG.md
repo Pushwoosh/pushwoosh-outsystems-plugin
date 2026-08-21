@@ -10,6 +10,18 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.70-OS.9
+
+### Features
+- Added `PW_APPID` and `PW_API_TOKEN` plugin variables. Set them in the
+  Extensibility Configurations of your application and the build writes them
+  into AndroidManifest.xml and Info.plist, so the SDK is configured even when
+  it starts before JavaScript runs (for example, a push delivered while the
+  app is not running). Variable names are case-sensitive. Initializing from
+  JavaScript keeps working and still applies when both are set
+
+---
+
 ## 8.3.70-OS.8
 
 ### Bug Fixes
