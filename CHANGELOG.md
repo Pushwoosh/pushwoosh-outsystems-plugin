@@ -10,6 +10,14 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.72-OS.1
+
+### Features
+- Rebased on the Cordova plugin 8.3.72: Android SDK updated to 6.11.1, and the
+  stale androidx.work pin is gone from the build
+
+---
+
 ## 8.3.71-OS.2
 
 ### Bug Fixes
