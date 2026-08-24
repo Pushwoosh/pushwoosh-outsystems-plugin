@@ -1,0 +1,16 @@
+// The HMS Push library normally reaches a build transitively, through the POM
+// of pushwoosh-huawei. MABS resolves plugin.xml framework artifacts one at a
+// time and drops their transitives, so the Huawei classes our module calls
+// never made it into the APK: HuaweiApiAvailability threw NoClassDefFoundError
+// ("Push Kit not integrated" in the log) and the SDK silently fell back to
+// FCM on Huawei devices. Declaring the dependency through gradle — the same
+// way upstream declares firebase-messaging — makes gradle resolve it with
+// transitives. The version matches the one pushwoosh-huawei is built against.
+
+repositories {
+    maven { url 'https://developer.huawei.com/repo/' }
+}
+
+dependencies {
+    implementation "com.huawei.hms:push:6.1.0.300"
+}

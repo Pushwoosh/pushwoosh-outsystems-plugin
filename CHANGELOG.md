@@ -10,6 +10,17 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.71-OS.2
+
+### Bug Fixes
+- Fixed Huawei push transport never activating. The HMS Push library
+  (`com.huawei.hms:push`) was missing from the build, so on Huawei devices the
+  SDK logged "Push Kit not integrated" and fell back to FCM, which does not
+  work without Google services. The library is now part of the build; devices
+  with HMS Core register through Huawei as intended
+
+---
+
 ## 8.3.71-OS.1
 
 ### Features
