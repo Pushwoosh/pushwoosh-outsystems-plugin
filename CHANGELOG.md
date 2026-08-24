@@ -10,6 +10,16 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.71-OS.1
+
+### Features
+- Rebased on the Cordova plugin 8.3.71: native SDKs updated to Android 6.11.0
+  and iOS 7.2.4. The Android SDK includes a Huawei fix — a failure while
+  fetching the HMS push token no longer falls through silently, which caused
+  empty push tokens on Huawei devices
+
+---
+
 ## 8.3.70-OS.11
 
 ### Features

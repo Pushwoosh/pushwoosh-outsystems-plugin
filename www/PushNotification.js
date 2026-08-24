@@ -1049,10 +1049,10 @@ PushNotification.prototype.setApiToken = function(token) {
 }
 
 PushNotification.prototype.getDiagnostics = function(success, fail) {
-	var nativeSdkVersions = { android: "6.9.6", ios: "7.1.5" };
+	var nativeSdkVersions = { android: "6.11.0", ios: "7.2.4" };
 	exec(function(diag) {
 		diag = diag || {};
-		diag.pluginVersion = "8.3.70-OS.11";
+		diag.pluginVersion = "8.3.71-OS.1";
 		diag.nativeSdkVersion = nativeSdkVersions[diag.platform] || "";
 		success(JSON.stringify(diag));
 	}, fail, "PushNotification", "getDiagnostics", []);
