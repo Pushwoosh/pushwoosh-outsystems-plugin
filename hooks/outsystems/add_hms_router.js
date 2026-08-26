@@ -81,66 +81,40 @@ function copyJavaFile(srcFile) {
   }
 }
 
-function addService(manifestPath, serviceName, serviceTemplate) {
-  fs.readFile(manifestPath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading manifest file:', err);
-      return;
-    }
-
-    const applicationRegex = /<application\b[^>]*>/;
-    const applicationMatch = applicationRegex.exec(data);
-
-    if (!applicationMatch) {
-      console.error('<application> tag not found in manifest');
-      return;
-    }
-
-    const updatedManifest = data.substring(0, applicationMatch.index + applicationMatch[0].length) +
-      serviceTemplate +
-      data.substring(applicationMatch.index + applicationMatch[0].length);
-
-    fs.writeFile(manifestPath, updatedManifest, 'utf8', (err) => {
-      if (err) {
-        console.error('Error writing updated manifest:', err);
-        throw new Error('Error writing updated manifest:', err);
-      }
-      console.log('Service element added successfully!');
-    });
-  });
-}
-
 module.exports = function(context) {
     return new Promise(function(resolve, reject) {
-        var wwwpath = utils.getWwwPath(context);    
-    	var configPath = path.join(wwwpath, "HuaweiMessagingRouterService");
+        var wwwpath = utils.getWwwPath(context);
+        var configPath = path.join(wwwpath, "HuaweiMessagingRouterService");
         var prefZipFilename = "HuaweiMessagingRouterService";
         var zipFile = getZipFile(configPath, prefZipFilename);
 
-        // if zip file is present, lets unzip it!
-        if (zipFile) {
-        	var unzippedResourcesDir = unzip(zipFile, configPath, prefZipFilename);
-	        var unzippedFile = path.join(unzippedResourcesDir, "HuaweiMessagingRouterService.java");
-	        var copyWithSuccess = copyJavaFile(unzippedFile);
-            if (!copyWithSuccess) {
-                return reject(
-                    "Failed to install pushwoosh plugin. Reason: Unable to copy HuaweiMessagingRouterService file to project."
-                );
-            }
+        if (!zipFile) {
+            console.warn("[PUSHWOOSH HELPER] HuaweiMessagingRouterService.zip not found — HuaweiMessagingRouterService service will NOT be added to AndroidManifest.xml");
+            return resolve();
+        }
 
-            const manifestPath = context.opts.projectRoot + '/platforms/android/app/src/main/AndroidManifest.xml';
-            const serviceName = ".HuaweiMessagingRouterService";
-            const serviceTemplate = `
+        var unzippedResourcesDir = unzip(zipFile, configPath, prefZipFilename);
+        var unzippedFile = path.join(unzippedResourcesDir, "HuaweiMessagingRouterService.java");
+        var copyWithSuccess = copyJavaFile(unzippedFile);
+        if (!copyWithSuccess) {
+            return reject(
+                "Failed to install Pushwoosh plugin. Reason: Unable to copy HuaweiMessagingRouterService file to project."
+            );
+        }
+
+        const manifestPath = context.opts.projectRoot + '/platforms/android/app/src/main/AndroidManifest.xml';
+        const serviceName = ".HuaweiMessagingRouterService";
+        const serviceTemplate = `
                 <service android:name="${serviceName}" android:exported="false">
                     <intent-filter android:priority="500">
                         <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
                     </intent-filter>
                 </service>`;
 
-            if (fs.existsSync(manifestPath)) {
-                console.log("manifest exists");
-                addService(manifestPath, serviceName, serviceTemplate);
-            }
+        try {
+            utils.installService(manifestPath, serviceName, serviceTemplate);
+        } catch (e) {
+            return reject("Failed to install Pushwoosh plugin. Reason: " + e.message);
         }
 
         return resolve();

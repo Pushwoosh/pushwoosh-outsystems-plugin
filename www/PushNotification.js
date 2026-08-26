@@ -1052,7 +1052,7 @@ PushNotification.prototype.getDiagnostics = function(success, fail) {
 	var nativeSdkVersions = { android: "6.11.1", ios: "7.2.4" };
 	exec(function(diag) {
 		diag = diag || {};
-		diag.pluginVersion = "8.3.72-OS.1";
+		diag.pluginVersion = "8.3.72-OS.2";
 		diag.nativeSdkVersion = nativeSdkVersions[diag.platform] || "";
 		success(JSON.stringify(diag));
 	}, fail, "PushNotification", "getDiagnostics", []);

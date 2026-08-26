@@ -10,6 +10,19 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.72-OS.2
+
+### Bug Fixes
+- Fixed push delivery silently broken on Android: the Firebase and Huawei router
+  services could be missing from the built AndroidManifest.xml, because both
+  install hooks patched it asynchronously and overwrote each other
+- A hook that cannot patch the manifest now fails the build instead of finishing
+  without the service
+- Reinstalling over an existing `platforms/android` replaces the router service
+  declaration instead of keeping the stale one
+
+---
+
 ## 8.3.72-OS.1
 
 ### Features

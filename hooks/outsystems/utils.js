@@ -66,9 +66,41 @@ function getWwwPath(context) {
 }
 
 
+// Sync on purpose: both router hooks patch the same manifest, async read/write raced and lost inserts (ZD 103369)
+function installService(manifestPath, serviceName, serviceTemplate) {
+    if (!fs.existsSync(manifestPath)) {
+        throw new Error("AndroidManifest.xml not found at " + manifestPath);
+    }
+
+    var data = fs.readFileSync(manifestPath, 'utf8');
+
+    // Replace, not skip: a name-only check would keep a stale service config on a reused platforms/android
+    const existingService = new RegExp('\\s*<service[^>]*android:name="' + serviceName.replace(/\./g, '\\.') + '"[^>]*?(?:/>|>[\\s\\S]*?</service>)', 'g');
+    var replaced = false;
+    data = data.replace(existingService, function () { replaced = true; return ''; });
+    if (replaced) {
+        console.log('[PUSHWOOSH HELPER] ' + serviceName + ' already present, replacing');
+    }
+
+    const applicationRegex = /<application\b[^>]*>/;
+    const applicationMatch = applicationRegex.exec(data);
+    if (!applicationMatch) {
+        throw new Error('<application> tag not found in AndroidManifest.xml');
+    }
+
+    const updatedManifest = data.substring(0, applicationMatch.index + applicationMatch[0].length) +
+        serviceTemplate +
+        data.substring(applicationMatch.index + applicationMatch[0].length);
+
+    fs.writeFileSync(manifestPath, updatedManifest, 'utf8');
+    console.log('[PUSHWOOSH HELPER] ' + serviceName + ' added to AndroidManifest.xml');
+}
+
+
 module.exports = {
     getPlatformVersion: getPlatformVersion,
     rmNonEmptyDir: rmNonEmptyDir,
     getPlatformPath: getPlatformPath,
     getWwwPath: getWwwPath,
+    installService: installService,
 };

@@ -163,7 +163,7 @@ module.exports = function(context) {
 
         if (!copyWithSuccess) {
             return reject(
-                "Failed to install pushwoosh plugin. Reason: Unable to copy google services file to project."
+                "Failed to install Pushwoosh plugin. Reason: Unable to copy google services file to project."
             );
         }
         return resolve();

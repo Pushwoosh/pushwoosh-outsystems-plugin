@@ -56,7 +56,7 @@ Add the plugin in your module's **Extensibility Configurations**:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.72-OS.1",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.72-OS.2",
     "variables": [
       { "name": "LOG_LEVEL", "value": "DEBUG" }
     ]
@@ -237,7 +237,7 @@ Set these under `variables` in the Extensibility Configurations:
 ```json
 {
   "plugin": {
-    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.72-OS.1",
+    "url": "https://github.com/Pushwoosh/pushwoosh-outsystems-plugin.git#8.3.72-OS.2",
     "variables": [
       { "name": "PW_APPID", "value": "XXXXX-XXXXX" },
       { "name": "PW_API_TOKEN", "value": "your device API token" },
