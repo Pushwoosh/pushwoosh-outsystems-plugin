@@ -41,15 +41,13 @@ function readPreferences(projectRoot) {
     return values;
 }
 
-function replaceValue(filePath, pattern, value, label) {
+function replaceValue(filePath, pattern, render, label) {
     var content = fs.readFileSync(filePath, "utf8");
     if (!pattern.test(content)) {
         log(label + " not found in " + path.basename(filePath) + " — skipped");
         return;
     }
-    content = content.replace(pattern, function (match, head, tail) {
-        return head + value + tail;
-    });
+    content = content.replace(pattern, render);
     fs.writeFileSync(filePath, content, "utf8");
     log(label + " written to " + path.basename(filePath));
 }
@@ -61,7 +59,9 @@ function updateAndroid(projectRoot, entry, value) {
     replaceValue(
         manifestPath,
         new RegExp('(<meta-data[^>]*android:name="' + key + '"[^>]*android:value=")[^"]*(")'),
-        value,
+        function (match, head, tail) {
+            return head + value + tail;
+        },
         entry.manifestKey
     );
 }
@@ -74,8 +74,11 @@ function updateIos(projectRoot, entry, value) {
         if (!fs.existsSync(plistPath)) return;
         replaceValue(
             plistPath,
-            new RegExp("(<key>" + entry.plistKey + "</key>\\s*<string>)[^<]*(</string>)"),
-            value,
+            // cordova writes an empty value as a self-closing <string/>, never as <string></string>
+            new RegExp("(<key>" + entry.plistKey + "</key>\\s*)(?:<string>[^<]*</string>|<string\\s*/>)"),
+            function (match, head) {
+                return head + "<string>" + value + "</string>";
+            },
             entry.plistKey
         );
     });

@@ -10,6 +10,16 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.72-OS.3
+
+### Bug Fixes
+- Fixed the PW_APPID and PW_API_TOKEN application preferences not reaching the
+  iOS build: Pushwoosh_APPID stayed empty in the built Info.plist while the same
+  preference was applied on Android, so the SDK started without an application
+  code and the device never registered for pushes
+
+---
+
 ## 8.3.72-OS.2
 
 ### Bug Fixes
