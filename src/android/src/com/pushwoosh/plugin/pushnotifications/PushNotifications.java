@@ -228,7 +228,21 @@ public class PushNotifications extends CordovaPlugin {
 			return false;
 		}
 
-		Pushwoosh.getInstance().setAppId(appid);
+		if (appid != null) {
+			appid = appid.trim();
+		}
+		if (appid == null || appid.isEmpty()) {
+			// Keep com.pushwoosh.appid from the manifest instead of erasing it.
+			String manifestAppId = Pushwoosh.getInstance().getAppId();
+			if (manifestAppId == null || manifestAppId.trim().isEmpty()) {
+				PWLog.error(TAG, "onDeviceReady: no application code, neither passed in nor set in AndroidManifest.xml");
+				callbackContext.error("Missing Pushwoosh App ID");
+				return false;
+			}
+			PWLog.noise(TAG, "onDeviceReady: no application code passed, keeping the one from AndroidManifest.xml");
+		} else {
+			Pushwoosh.getInstance().setAppId(appid);
+		}
 
 		try {
 			processPendingPushNotifications();

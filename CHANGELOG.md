@@ -10,6 +10,49 @@ build is based on, then the iteration of the OutSystems layer over it.
 
 ---
 
+## 8.3.74-OS.1
+
+### Features
+- Rebased on the Cordova plugin 8.3.74: native SDKs updated to Android 6.12.0
+  and iOS 7.2.5
+- Inbox messages can now be shown as rich cards — a full-bleed banner, an image
+  with title and text, a classic icon-title-text row, a swipeable carousel or a
+  video poster that opens a full-screen player. The card is chosen by the
+  `displayType` value in the message's custom data, and cards can carry inline
+  action buttons (Android)
+- Rich Media of an incoming push is prefetched in the background, so the
+  notification is posted without waiting for the download, and content opened
+  from the Inbox or a notification is reused instead of downloaded again
+  (Android)
+
+### Bug Fixes
+- Fixed the PW_APPID and PW_API_TOKEN application preferences not reaching the
+  iOS build when the build declared no entry for them: the key is now appended
+  to the application target's Info.plist instead of being skipped, so the SDK
+  starts with an application code and the device registers for pushes
+- Fixed the Android build failing with a manifest merger error on a repeated
+  build: cordova re-inserts its own meta-data node for a name whose value the
+  hook had rewritten, leaving AndroidManifest.xml with two entries for the same
+  name and different values. Duplicate entries are now folded into one
+- Fixed an empty application code in the onDeviceReady block erasing the one
+  the build had already written. On Android the value from AndroidManifest.xml
+  is kept, and when there is none the action answers with an error instead of
+  reporting success on an unconfigured SDK; the iOS side of the same fix now
+  comes from the upstream plugin
+- A preference that did not reach the native build is now reported in the build
+  log with what was observed, instead of being skipped silently
+- Fixed iOS crashes when plugin methods received an argument of an unexpected
+  type (`setTags`, `setEmails`, `setUserId`, `setLanguage`, `postEvent` and
+  others), a crash on an outgoing VoIP call placed without a contact
+  identifier, a crash on a VoIP push carrying nested `null` values, an Android
+  crash on an incoming call when a custom call event handler failed to
+  initialize, and the plugin module throwing when imported outside a Cordova
+  WebView
+- Inbox messages delivered by push now stay in the list while the server
+  finishes indexing them (Android)
+
+---
+
 ## 8.3.72-OS.3
 
 ### Bug Fixes
